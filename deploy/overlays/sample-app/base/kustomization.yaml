@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: sample-app-namespace
+
+resources:
+  - https://github.com/ankitkumarakt746/k8s-kustomize-base-templates.git//base-templates/deployment/sample-app-template
+
+commonLabels:
+  app: sample-app-label
+
+patches:
+- target:
+    kind: .*
+    name: default
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: sample-app-deployment
+- target:
+    kind: Deployment
+    name: sample-app-deployment
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/name
+      value: sample-app-container
+- path: resources.yaml
+- path: affinity.yaml
+# - path: hpa.yaml      # kustomization problem
+- path: images.yaml
+- path: lifecycle.yaml
+- path: replicas.yaml
+# - path: secrets.yaml
+# - path: service.yaml      # kustomization problem
+# - path: configmap.yaml
+# - path: mount.yaml
+# - path: apm.yaml
+# - path: args.yaml
+
+
+
